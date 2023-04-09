@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Weather App</string>
+
+<!-- Open Weather Api Key
+     Ideally this would not be stored in plain text here and would be stored
+     in a remote database and retrieved through an authorized connection -->
+    <string name="open_weather_api_key">a9002e70fd10d2f19c5f6e3fd02f33e9</string>
+
+</resources>
