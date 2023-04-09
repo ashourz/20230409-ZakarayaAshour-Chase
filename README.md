@@ -10,7 +10,7 @@ Coding Challenge: Weather
 - Auto-load the last city searched upon app launch.
 - Ask the User for location access, If the User gives permission to access the location, then retrieve weather data by default
 
-#Key Libraries
+# Key Libraries
 - Java
   - RxJava
 - Kotlin
