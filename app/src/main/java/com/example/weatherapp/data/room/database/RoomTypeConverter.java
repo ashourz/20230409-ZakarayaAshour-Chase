@@ -5,6 +5,9 @@ import androidx.room.TypeConverter;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+/**
+ * Data type converter for Room Database
+ * */
 public class RoomTypeConverter {
     @TypeConverter
     public static LocalDateTime fromLong(Long value) {

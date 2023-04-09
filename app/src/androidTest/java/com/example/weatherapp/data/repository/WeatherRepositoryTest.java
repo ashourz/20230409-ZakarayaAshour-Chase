@@ -3,18 +3,14 @@ package com.example.weatherapp.data.repository;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.weatherapp.data.model.CurrentWeather;
-import com.example.weatherapp.data.model.FiveDayForecast;
 import com.example.weatherapp.data.model.GeoCity;
 import com.example.weatherapp.data.model.WeatherMapper;
-import com.example.weatherapp.data.model.weather_components.City;
 import com.example.weatherapp.data.model.weather_components.Main;
 import com.example.weatherapp.data.model.weather_components.Weather;
-import com.example.weatherapp.data.model.weather_components.WeatherListItem;
 import com.example.weatherapp.data.room.dao.WeatherDao;
 import com.example.weatherapp.data.room.entity.WeatherEntity;
 
@@ -59,30 +55,6 @@ public class WeatherRepositoryTest {
         weatherDao.deleteAll();
     }
 
-    @Test
-    public void updateWeather_withValidInput_shouldInsertIntoWeatherDao() {
-        // Arrange
-        FiveDayForecast fiveDayForecast = createMockFiveDayForecast();
-
-        // Act
-        List<Long> insertedIdList = weatherRepository.updateWeather(fiveDayForecast);
-        assertTrue(!insertedIdList.isEmpty());
-        // Assert
-        List<WeatherEntity> actualWeatherEntities = weatherDao.getAll();
-        WeatherEntity expectedWeatherEntity = weatherMapper.fiveDayForecastToWeatherEntityList(fiveDayForecast).get(0);
-        for(WeatherEntity item : actualWeatherEntities){
-            assertEquals(item.city, expectedWeatherEntity.city);
-            assertEquals(item.state, expectedWeatherEntity.state);
-            assertEquals(item.country, expectedWeatherEntity.country);
-            assertEquals(item.icon, expectedWeatherEntity.icon);
-            assertEquals(item.feelsLike, expectedWeatherEntity.feelsLike);
-            assertEquals(item.temp, expectedWeatherEntity.temp);
-            assertEquals(item.tempMin, expectedWeatherEntity.tempMin);
-            assertEquals(item.tempMax, expectedWeatherEntity.tempMax);
-            assertEquals(item.description, expectedWeatherEntity.description);
-            assertEquals(item.datetime, expectedWeatherEntity.datetime);
-        }
-    }
 
     @Test
     public void updateCurrentWeather_withValidInput_shouldInsertIntoWeatherDao() {
@@ -112,17 +84,6 @@ public class WeatherRepositoryTest {
         }
     }
 
-    private FiveDayForecast createMockFiveDayForecast() {
-        List<WeatherListItem> weatherListItems = new ArrayList<>();
-        weatherListItems.add(createMockWeatherListItem());
-
-        FiveDayForecast fiveDayForecast = new FiveDayForecast();
-        fiveDayForecast.setList(weatherListItems);
-        fiveDayForecast.setCity(createMockCity());
-
-        return fiveDayForecast;
-    }
-
     private CurrentWeather createMockCurrentWeather() {
         CurrentWeather currentWeather = new CurrentWeather();
         currentWeather.setDt(1648834800L);
@@ -141,13 +102,6 @@ public class WeatherRepositoryTest {
         return main;
     }
 
-    private City createMockCity() {
-        City city = new City();
-        city.setName("Test City");
-        city.setCountry("TC");
-
-        return city;
-    }
 
     private GeoCity createMockGeoCity() {
         GeoCity city = new GeoCity();
@@ -167,13 +121,5 @@ public class WeatherRepositoryTest {
 
         return weatherList;
     }
-    private WeatherListItem createMockWeatherListItem() {
 
-        WeatherListItem weatherListItem = new WeatherListItem();
-        weatherListItem.setDt(1648834800L);
-        weatherListItem.setMain(createMockMain());
-        weatherListItem.setWeather(createMockWeatherList());
-
-        return weatherListItem;
-    }
 }

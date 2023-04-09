@@ -17,6 +17,9 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.android.qualifiers.ApplicationContext;
 import dagger.hilt.components.SingletonComponent;
 
+/**
+ * Hilt Database Module for dependency injection between Room Database, Dao, Repository
+ * */
 @Module
 @InstallIn(SingletonComponent.class)
 public class DatabaseModule {
@@ -42,7 +45,7 @@ public class DatabaseModule {
 
     @Singleton
     @Provides
-    public WeatherMapper provideWeatherMapper(WeatherDatabase weatherDatabase) {return new WeatherMapper();}
+    public WeatherMapper provideWeatherMapper() {return new WeatherMapper();}
 }
 
 

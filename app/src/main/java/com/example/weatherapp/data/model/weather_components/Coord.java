@@ -15,23 +15,23 @@ import java.util.Map;
         "lat"
 })
 public class Coord {
-//    /**
-//     * No args constructor for use in serialization
-//     *
-//     */
-//    public Coord() {
-//    }
-//
-//    /**
-//     *
-//     * @param lon
-//     * @param lat
-//     */
-//    public Coord(Double lat, Double lon) {
-//        super();
-//        this.lat = lat;
-//        this.lon = lon;
-//    }
+    /**
+     * No args constructor for use in serialization
+     *
+     */
+    public Coord() {
+    }
+
+    /**
+     *
+     * @param lon
+     * @param lat
+     */
+    public Coord(Double lat, Double lon) {
+        super();
+        this.lat = lat;
+        this.lon = lon;
+    }
     @JsonProperty("lon")
     private Double lon;
     @JsonProperty("lat")

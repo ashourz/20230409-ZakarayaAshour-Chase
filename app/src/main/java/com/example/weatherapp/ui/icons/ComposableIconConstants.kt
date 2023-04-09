@@ -3,6 +3,9 @@ package com.example.weatherapp.ui.icons
 import androidx.compose.ui.unit.dp
 import com.example.weatherapp.R
 
+/**
+ * Central location to manage default values and used icons
+ * */
 object ComposableIconConstants {
     val defaultIconSize = 32.dp
     //region: Icons

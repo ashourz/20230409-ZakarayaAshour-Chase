@@ -49,7 +49,10 @@ class DataViewModel @Inject constructor(
         updateCurrentLocationWeather()
     }
 
-    //Permission Handling
+    /**
+     * Provides scalable functionality to queue multiple permission dialogs if actions require permissions that are not granted
+     * */
+    //region: Permission Handling
     val visiblePermissionDialogQueue = mutableStateListOf<String>()
 
     fun dismissPermissionDialogQueue() {
@@ -65,21 +68,32 @@ class DataViewModel @Inject constructor(
             visiblePermissionDialogQueue.add(nextIndex, permission)
         }
     }
+    //endregion
 
-    //Stored Location Name
+    /**
+     * Provides maintenance of state of city search name text and weather icon bitmap
+     * These flows are updated on incoming stored weather data flow emissions
+     * */
+    //region: Stored Display Data Flows
+    //Search Location Name
     private var _searchLocationNameFlow = MutableStateFlow<String>("")
     var searchLocationNameFlow = _searchLocationNameFlow.asStateFlow()
     fun updateSearchLocationName(updatedSearchName: String) {
         _searchLocationNameFlow.value = updatedSearchName
     }
-
-    private var _currentWeatherIconFlow = MutableStateFlow<Bitmap?>(null)
-    var currentWeatherIconFlow = _currentWeatherIconFlow.asStateFlow()
-    private fun updateCurrentWeatherIcon(bitmap: Bitmap?) {
-        _currentWeatherIconFlow.value = bitmap
+    //Current Weather Bitmap
+    private var _currentWeatherBitmapFlow = MutableStateFlow<Bitmap?>(null)
+    var currentWeatherBitmapFlow = _currentWeatherBitmapFlow.asStateFlow()
+    private fun updateCurrentWeatherBitmap(bitmap: Bitmap?) {
+        _currentWeatherBitmapFlow.value = bitmap
     }
+    //endregion
 
-    //Weather Flow
+    /**
+     * storedWeatherFlow
+     * Maps hot live data flow to cold kotlin flow
+     * On each emission of this flow (if subscribed to by the UI) relative update processes are initiated to the update searchLocationName Flow and currentWeatherBitmap Flow
+     * */
     @OptIn(ExperimentalCoroutinesApi::class)
     val storedWeatherFlow: Flow<WeatherEntity?> = weatherRepository.weatherLiveData().asFlow().flowOn(Dispatchers.IO).mapLatest { weatherEntityList ->
         weatherEntityList.firstOrNull()
@@ -89,18 +103,24 @@ class DataViewModel @Inject constructor(
             updateWeatherIconBitmap(weatherEntity.icon)
         } else {
             updateSearchLocationName("")
-            updateCurrentWeatherIcon(null)
+            updateCurrentWeatherBitmap(null)
         }
     }
 
-
-    //GeoCity Search Result Flow
+    /**
+     * Provides city search results that are to be displayed in search bar dropdown in UI
+     * */
+    //region: GeoCity Search Result Flow
     private var _geoCitySearchResults: MutableStateFlow<List<GeoCity>> = MutableStateFlow(emptyList())
     val geoCitySearchResults: StateFlow<List<GeoCity>> = _geoCitySearchResults.asStateFlow()
     fun clearGeoCitySearchResults() {
         _geoCitySearchResults.value = emptyList()
     }
+    //endregion
 
+    /**
+     * Data refresh method for either selected dropdown city result or current location (once reverse geocity data is retrieved)
+     * */
     fun refreshCurrentWeather(geoCity: GeoCity, latitude: Double, longitude: Double) {
         viewModelScope.launch(Dispatchers.IO) {
             val optionalCurrentWeather = currentWeatherApiService.getCurrentWeatherData(latitude, longitude)
@@ -128,21 +148,9 @@ class DataViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getCurrentCity(latitude: Double, longitude: Double): GeoCity? {
-        return withContext(Dispatchers.IO) {
-            val optionalCurrentCity = geoCityApiService.getCityNameData(latitude, longitude)
-            when (optionalCurrentCity.isPresent) {
-                true -> {
-                    return@withContext optionalCurrentCity?.getOrNull()?.getOrNull(0)
-                }
-                false -> {
-                    //Reverse Location Failed
-                    return@withContext null
-                }
-            }
-        }
-    }
-
+    /**
+     * Data refresh methos for current location. This action is taken on initialization of DataViewModel and on click of the current location icon (with sufficient permissions)
+     * */
     fun updateCurrentLocationWeather() {
         viewModelScope.launch(Dispatchers.IO) {
             if (ActivityCompat.checkSelfPermission(application.applicationContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
@@ -169,7 +177,9 @@ class DataViewModel @Inject constructor(
         }
     }
 
-
+    /**
+     * Geo City search on user click of search icon in UI. The results of this method are emitted onto the GeoCitySearchResults flow and displayed in the search bar dropdown menu.
+     * */
     fun getGeo() {
         viewModelScope.launch(Dispatchers.IO) {
             val optionalGeoCityList = geoCityApiService.getCityData(_searchLocationNameFlow.value)
@@ -189,9 +199,32 @@ class DataViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Private function to get current city data
+     * */
+    private suspend fun getCurrentCity(latitude: Double, longitude: Double): GeoCity? {
+        return withContext(Dispatchers.IO) {
+            val optionalCurrentCity = geoCityApiService.getCityNameData(latitude, longitude)
+            when (optionalCurrentCity.isPresent) {
+                true -> {
+                    return@withContext optionalCurrentCity?.getOrNull()?.getOrNull(0)
+                }
+                false -> {
+                    //Reverse Location Failed
+                    return@withContext null
+                }
+            }
+        }
+    }
+
+    /**
+     * Private function to inspect local image cache for update weather bitmap.
+     * If bitmap is not located in image cache it is retrieved through a UTL request and stored in the local cache.
+     * Bitmap is then emitted to currentWeatherBitmap flow
+     * */
     private fun updateWeatherIconBitmap(imageName: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            updateCurrentWeatherIcon(
+            updateCurrentWeatherBitmap(
                 imagesCache.getImageFromCache(imageName)
                     ?: try {
                         val baseUrl = "https://openweathermap.org/img/wn/"

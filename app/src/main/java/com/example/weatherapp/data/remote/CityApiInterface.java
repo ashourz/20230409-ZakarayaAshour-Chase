@@ -9,6 +9,9 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 
+/**
+ * Interface for retrofit calls for geocoding and reverse lookup
+ * */
 public interface CityApiInterface {
     @GET("direct?limit=5")
     Call<List<GeoCity>> getCityCoordinates(@Query("q") String cityName, @Query("appid") String apiKey);

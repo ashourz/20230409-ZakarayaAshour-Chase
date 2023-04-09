@@ -3,6 +3,9 @@ package com.example.weatherapp.extensions
 import com.example.weatherapp.data.model.GeoCity
 import com.example.weatherapp.data.room.entity.WeatherEntity
 
+/**
+ * Full display name format for GeoCity
+ * */
 fun GeoCity.getFullDisplayName(): String {
     var displayName = this.name
     if(this.state.isNullOrBlank()){
@@ -14,6 +17,9 @@ fun GeoCity.getFullDisplayName(): String {
     return displayName
 }
 
+/**
+ * Full display name format for WeatherEntity
+ * */
 fun WeatherEntity.getFullDisplayName(): String {
     var displayName = this.city
     if(this.state.isNotBlank()){
@@ -25,6 +31,9 @@ fun WeatherEntity.getFullDisplayName(): String {
     return displayName
 }
 
+/**
+ * State/Cuntry display name format for WeatherEntity
+ * */
 fun WeatherEntity.getStateCountryDisplayName(): String {
     var displayName = this.state
     if(displayName.isNotBlank()){displayName = displayName.plus(", ")}

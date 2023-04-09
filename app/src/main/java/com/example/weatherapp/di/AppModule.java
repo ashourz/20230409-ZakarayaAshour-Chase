@@ -17,6 +17,9 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+/**
+ * Hilt App Module for Application scoped singletons
+ * */
 @Module
 @InstallIn(SingletonComponent.class)
 public class AppModule {

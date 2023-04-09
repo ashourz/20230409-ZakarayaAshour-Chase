@@ -10,6 +10,9 @@ import com.example.weatherapp.data.room.entity.WeatherEntity;
 
 import java.util.List;
 
+/**
+ * DAO for Room Weather Table
+ * */
 @Dao
 public interface WeatherDao {
     @Query("SELECT * FROM weather_table ORDER BY datetime")
@@ -17,15 +20,12 @@ public interface WeatherDao {
 
     @Query("SELECT * FROM weather_table")
     List<WeatherEntity> getAll();
+
     /**
-     * Returns list of Long rowIds of inserted Elements
+     * Returns Long rowId of inserted Element or -1 if nothing inserted
      * */
     @Insert
-    List<Long> insertAll(List<WeatherEntity> weatherEntityList);
-    @Insert
     Long insert(WeatherEntity weatherEntity);
-    @Delete
-    void delete(WeatherEntity user);
 
     @Query("DELETE FROM weather_table")
     void deleteAll();

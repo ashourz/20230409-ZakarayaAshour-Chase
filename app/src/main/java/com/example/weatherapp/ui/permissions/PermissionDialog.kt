@@ -6,7 +6,10 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.weatherapp.R
 import com.example.weatherapp.ui.permissions.LocationPermissionTextProvider
 import com.example.weatherapp.ui.permissions.PermissionTextProvider
 
@@ -23,27 +26,38 @@ fun PermissionDialog(
     onOkClick: () -> Unit = {},
     onGoToAppSetttingsClick: () -> Unit = {}
 ) {
+    val localContext = LocalContext.current
     AlertDialog(
         modifier = modifier,
         onDismissRequest = onDismiss,
         confirmButton = {
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {if(isPermanentlyDeclined){onGoToAppSetttingsClick()}else{onOkClick()}}
-            ){
+                onClick = {
+                    if (isPermanentlyDeclined) {
+                        onGoToAppSetttingsClick()
+                    } else {
+                        onOkClick()
+                    }
+                }
+            ) {
                 Text(
-                    text = if(isPermanentlyDeclined){"Grant Permission"}else{"Ok"}
+                    text = if (isPermanentlyDeclined) {
+                        stringResource(R.string.grant_permission)
+                    } else {
+                        stringResource(R.string.ok)
+                    }
                 )
             }
         },
         title = {
             Text(
-                text = "Permission Required"
+                text = stringResource(R.string.permission_required)
             )
         },
         text = {
             Text(
-                text = permissionTextProvider.getDescription(isPermanentlyDeclined)
+                text = permissionTextProvider.getDescription(localContext, isPermanentlyDeclined)
             )
         }
     )

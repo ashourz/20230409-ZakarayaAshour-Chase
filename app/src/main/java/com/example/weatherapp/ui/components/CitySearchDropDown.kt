@@ -5,15 +5,22 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.weatherapp.R
 import com.example.weatherapp.extensions.getFullDisplayName
 import com.example.weatherapp.presentation.DataViewModel
 import com.example.weatherapp.ui.icons.ComposableIconConstants
 import com.example.weatherapp.ui.icons.SizedIcon
 
+
+/**
+ * Custom Exposed Dropdown Menu
+ * */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CitySearchDropDown (
@@ -23,21 +30,21 @@ fun CitySearchDropDown (
     var dropdownExpanded by remember { mutableStateOf(false) }
     val storedSearchText by viewModel.searchLocationNameFlow.collectAsState()
     val geoCitySearchList by viewModel.geoCitySearchResults.collectAsState()
-
+    val localContext = LocalContext.current
     ExposedDropdownMenuBox(
         modifier = modifier,
         expanded = dropdownExpanded,
         onExpandedChange = { dropdownExpanded = false }) {
         OutlinedTextField(
-            modifier = Modifier.fillMaxWidth().semantics { contentDescription = "City Search"  },
-            label = { Text(text = "City Search") },
+            modifier = Modifier.fillMaxWidth().semantics { contentDescription = localContext.getString(R.string.city_search)  },
+            label = { Text(text = stringResource(R.string.city_search)) },
             value = storedSearchText,
             onValueChange = { updatedText ->
                 viewModel.clearGeoCitySearchResults()
                 viewModel.updateSearchLocationName(updatedText)
             },
             leadingIcon = {
-                SizedIcon(iconDrawable = ComposableIconConstants.locationPinIcon, contentDescription = "Weather Location")
+                SizedIcon(iconDrawable = ComposableIconConstants.locationPinIcon, contentDescription = stringResource(R.string.weather_location))
             },
             maxLines = 1,
             trailingIcon = {
@@ -45,7 +52,7 @@ fun CitySearchDropDown (
                     viewModel.getGeo()
                     dropdownExpanded = true
                 }) {
-                    SizedIcon(iconDrawable = ComposableIconConstants.searchIcon, contentDescription = "Search City Weather")
+                    SizedIcon(iconDrawable = ComposableIconConstants.searchIcon, contentDescription = stringResource(R.string.search_city_weather))
                 }
             },
             keyboardOptions = KeyboardOptions(
@@ -58,7 +65,7 @@ fun CitySearchDropDown (
             onDismissRequest = { dropdownExpanded = false }) {
             geoCitySearchList.forEach { location ->
                 DropdownMenuItem(
-                    modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Dropdown City Item" },
+                    modifier = Modifier.fillMaxWidth().semantics { contentDescription = localContext.getString(R.string.dropdown_city_item) },
                     onClick = {
                         dropdownExpanded = false
                         viewModel.refreshCurrentWeather(

@@ -1,14 +1,19 @@
 package com.example.weatherapp.ui.permissions
 
+import android.app.Application
+import android.content.Context
+import com.example.weatherapp.R
+import javax.inject.Inject
+
 /**
  * Provides description for location permission dependent on if the permission has been permanently declined or not
  * */
-class LocationPermissionTextProvider: PermissionTextProvider {
-    override fun getDescription(isPermanentlyDeclined: Boolean): String {
+class LocationPermissionTextProvider : PermissionTextProvider {
+    override fun getDescription(context: Context, isPermanentlyDeclined: Boolean): String {
         return if(isPermanentlyDeclined){
-            "It seems you permanently declined approximate location permissions. " +
-                    "You can go to the app settings to grant it."
-        }else "This app requires access to your approximate location to provide " +
-                "weather information for you current location."
+            context.getString(R.string.permanently_declined_description)
+        }else {
+            context.getString(R.string.temp_declined_description)
+        }
     }
 }

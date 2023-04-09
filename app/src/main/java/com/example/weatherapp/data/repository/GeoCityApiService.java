@@ -16,7 +16,11 @@ import javax.inject.Named;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-
+/**
+ * Makes Retrofit call to api and retrieves maps data from JSON to java object.
+ * Further development could include different outputs depending on the response failure.
+ * At the moment, all failures or empty responses will result in a null or empty optional value.
+ * */
 public class GeoCityApiService {
     private final CityApiInterface cityApiInterface;
     private final String apiKey;
