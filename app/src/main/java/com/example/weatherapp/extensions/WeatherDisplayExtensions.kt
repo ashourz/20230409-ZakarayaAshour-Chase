@@ -8,7 +8,7 @@ import com.example.weatherapp.data.room.entity.WeatherEntity
  * */
 fun GeoCity.getFullDisplayName(): String {
     var displayName = this.name
-    if(this.state.isNullOrBlank()){
+    if(!this.state.isNullOrBlank()){
         displayName = displayName.plus(", ${this.state}")
     }
     if(this.country.isNotBlank()){

@@ -1,8 +1,7 @@
 package com.example.weatherapp.data.di;
 
-import static org.junit.Assert.*;
-
-import androidx.room.RoomDatabase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import com.example.weatherapp.data.room.dao.WeatherDao;
 import com.example.weatherapp.data.room.database.WeatherDatabase;
