@@ -15,21 +15,16 @@ Coding Challenge: Weather
   - RxJava
 - Kotlin
   - Kotlin Coroutines 
-  
-- MaterialDesign 2
 - Android Jetpack
   - Room
-  - Compose
+  - Compose (MaterialDesign 2)
   - Lifecycle
- 
-- # Dependency Injection
+- Dependency Injection
   - Hilt
-
-- # RestApi
+- REST API
   - Retrofit 2
   - OkHttp
   - FasterXML Jackson
-
-- # Unit and Integration Testing
+- Unit and Integration Testing
   - Compose UI Test
   - JUnit4
