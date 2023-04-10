@@ -3,6 +3,7 @@ package com.example.weatherapp.data.repository;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -10,6 +11,7 @@ import com.example.weatherapp.data.model.CurrentWeather;
 import com.example.weatherapp.data.model.FiveDayForecast;
 import com.example.weatherapp.data.model.GeoCity;
 import com.example.weatherapp.data.model.WeatherMapper;
+import com.example.weatherapp.data.model.weather_components.City;
 import com.example.weatherapp.data.model.weather_components.Main;
 import com.example.weatherapp.data.model.weather_components.Weather;
 import com.example.weatherapp.data.model.weather_components.WeatherListItem;
@@ -178,15 +180,5 @@ public class WeatherRepositoryTest {
         return city;
     }
 
-    private List<Weather> createMockWeatherList() {
-
-        List<Weather> weatherList = new ArrayList<>();
-        Weather weather = new Weather();
-        weather.setId(800);
-        weather.setDescription("clear sky");
-        weatherList.add(weather);
-
-        return weatherList;
-    }
 
 }

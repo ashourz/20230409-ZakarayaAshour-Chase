@@ -1,5 +1,6 @@
 package com.example.weatherapp.data.model;
 
+import com.example.weatherapp.data.model.weather_components.City;
 import com.example.weatherapp.data.model.weather_components.Weather;
 import com.example.weatherapp.data.model.weather_components.WeatherListItem;
 import com.example.weatherapp.data.room.entity.WeatherEntity;
