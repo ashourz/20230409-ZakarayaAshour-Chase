@@ -16,9 +16,10 @@ Coding Challenge: Weather
 - **Kotlin**
   - Kotlin Coroutines 
 - **Android Jetpack**
-  - Room
   - Compose (MaterialDesign 2)
   - Lifecycle
+  - Navigation
+  - Room
 - **Dependency Injection**
   - Hilt
 - **REST API**
@@ -31,17 +32,30 @@ Coding Challenge: Weather
   - HiltAndroidTest
   - JUnit4
 
+# Key Features
+  - Current Weather Location Screen
+  - 5 Day/3 Hour Weather Forecast Screen
+  - Drop Down City Search to pull weather data for specified city
+  - Current Location Button to pull weather data for devices current location
+  - Bottom Navigation Bar to toggle between screens
+  - Lazy List with sticky date header to show forecasted weather information
+  - Smooth and aesthetic portrait and landscape configuration
+  - Auto search for current locations weather data if permissions are granted
+  - Permission Request Intent launched on pressing Current Location Button if Coarse Location permission have not been granted
+  - Permission rationale dialog box explains to the user why location data is required when permissions are denied
+  - LruCache Image Cache to store Weather Condition Icon.
+
 # Screenshots
 <p float="left">
- <img src="https://user-images.githubusercontent.com/39238415/230772913-8de83588-c1e0-4cd7-acaf-690b08cbde22.png" width="160" />
-  <img src="https://user-images.githubusercontent.com/39238415/230772909-bd438580-718f-473d-87a3-06507c8ec492.png" width="160" />
- <img src="https://user-images.githubusercontent.com/39238415/230772903-83af516f-fa99-412b-8ead-bbc31e1d09f5.png" width="160" />
-  <img src="https://user-images.githubusercontent.com/39238415/230772887-1e527050-bf50-4865-9fe4-cbd2108b83c4.png" width="160" />
- <img src="https://user-images.githubusercontent.com/39238415/230772893-2a1608be-21f5-41b4-9e22-b9ba1615e8a7.png" width="160" />
+<img src="(https://user-images.githubusercontent.com/39238415/230876683-1c12a77e-144b-44ab-adc8-e13aba768ec4.png" width="160" />  
+<img src="https://user-images.githubusercontent.com/39238415/230876727-661598ba-b719-48f4-924b-2caedd070917.png" width="160" />
+<img src="https://user-images.githubusercontent.com/39238415/230876746-88d26d4a-6091-4ab9-8a36-6795abd5aa23.png" width="160" />
+<img src="https://user-images.githubusercontent.com/39238415/230876761-48a27e8a-de15-419a-b8ab-2e2096cf4c94.png" width="160" />
+<img src="https://user-images.githubusercontent.com/39238415/230876777-4f70c77a-3ebc-4893-b906-3ea7362496e4.png" width="160" />
 </p>
 <p float="left">
- 
- <img src="https://user-images.githubusercontent.com/39238415/230772898-0dfbfafc-dffc-4b83-bad4-8d387e7e1455.png" height="160" />
+ <img src="https://user-images.githubusercontent.com/39238415/230876907-62cb5c3d-9390-4552-aa61-a0faea854ca7.png" height="160" />
+ <img src="https://user-images.githubusercontent.com/39238415/230876917-fcffd5e7-233c-4087-b9a6-c48adc719836.png" height="160" />
 </p>
 
 
