@@ -4,7 +4,7 @@ package com.example.weatherapp.constants;
  * Enum of base Urls to be for Retrofit Clients
  * */
 public enum ApiBaseUrl {
-
+    WEATHER_BITMAP_BASE_URL("https://openweathermap.org/img/wn/"),
     GEOCODING_BASE_URL("https://api.openweathermap.org/geo/1.0/"),
 
     WEATHER_BASE_URL("https://api.openweathermap.org/data/2.5/");

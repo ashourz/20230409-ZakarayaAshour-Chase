@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.*
 import com.example.weatherapp.cache.ImagesCache
+import com.example.weatherapp.constants.ApiBaseUrl
 import com.example.weatherapp.data.model.GeoCity
 import com.example.weatherapp.data.repository.*
 import com.example.weatherapp.data.repository.baseclass.CityApiServiceBaseClass
@@ -44,10 +45,11 @@ class DataViewModel @Inject constructor(
     private val imagesCache: ImagesCache
 ) : ViewModel() {
 
+    /**
+     *On Initialization if permission is granted retrieve current location weather data
+     */
     init {
-        //On Initialization if permission is granted retrieve current location weather data
         updateCurrentLocationWeather()
-//        updateForecastWeatherByCurrentLocation()
     }
 
     /**
@@ -95,17 +97,10 @@ class DataViewModel @Inject constructor(
     private fun updateForecastWeatherBitmap(bitmapList: List<Bitmap?>) {
         _forecastWeatherBitmapFlow.value = bitmapList
     }
-
-    private var _currentWeatherDataFlow = MutableStateFlow<WeatherDisplayData?>(null)
-    var currentWeatherDataFlow = _currentWeatherDataFlow.asStateFlow()
-    private fun updateCurrentWeatherDataFlow(weatherDisplayData: WeatherDisplayData?) {
-        _currentWeatherDataFlow.value = weatherDisplayData
-    }
-
     //endregion
 
     /**
-     * storedWeatherFlow
+     * currentWeatherFlow
      * Maps hot live data flow to cold kotlin flow
      * On each emission of this flow (if subscribed to by the UI) relative update processes are initiated to the update searchLocationName Flow and currentWeatherBitmap Flow
      * */
@@ -122,6 +117,11 @@ class DataViewModel @Inject constructor(
         }
     }
 
+    /**
+     * forecastWeatherDataFlow
+     * Maps hot live data flow to cold kotlin flow
+     * On each emission of this flow (if subscribed to by the UI) relative update processes are initiated to the update forecastWeatherBitmap Flow
+     * */
     val forecastWeatherDataFlow: Flow<List<WeatherEntity>> = weatherRepository.forecastWeatherLiveData().asFlow().flowOn(Dispatchers.IO).onEach { weatherEntityList ->
         if (weatherEntityList.isNotEmpty()) {
             updateWeatherIconBitmapList(weatherEntityList.map { it.icon })
@@ -256,7 +256,7 @@ class DataViewModel @Inject constructor(
             updateCurrentWeatherBitmap(
                 imagesCache.getImageFromCache(imageName)
                     ?: try {
-                        val baseUrl = "https://openweathermap.org/img/wn/"
+                        val baseUrl = ApiBaseUrl.WEATHER_BITMAP_BASE_URL.baseUrl
                         val tailUrl = "@2x.png"
                         val inputStream: InputStream = URL(baseUrl.plus(imageName).plus(tailUrl)).content as InputStream
                         val imageBitmap = Drawable.createFromStream(inputStream, "src name")?.toBitmap(200, 200, Bitmap.Config.ARGB_8888)
@@ -264,20 +264,25 @@ class DataViewModel @Inject constructor(
                         imagesCache.addImageToCache(imageName, imageBitmap)
                         imageBitmap
                     } catch (e: Exception) {
-                        println(e.message)
+                        //TODO: ON EXCEPTION RETURN NULL. FURTHER DEVELOPMENT COULD RETRY THESE REQUESTS
                         null
                     }
             )
         }
     }
 
+    /**
+     * Private function to inspect local image cache for update weather bitmap.
+     * If bitmap is not located in image cache it is retrieved through a UTL request and stored in the local cache.
+     * All Bitmaps are then emitted to forecastWeatherBitmap flow
+     * */
     private fun updateWeatherIconBitmapList(imageNameList: List<String>) {
         viewModelScope.launch(Dispatchers.IO) {
             updateForecastWeatherBitmap(
                 imageNameList.map { imageName ->
                     imagesCache.getImageFromCache(imageName)
                         ?: try {
-                            val baseUrl = "https://openweathermap.org/img/wn/"
+                            val baseUrl = ApiBaseUrl.WEATHER_BITMAP_BASE_URL.baseUrl
                             val tailUrl = "@2x.png"
                             val inputStream: InputStream = URL(baseUrl.plus(imageName).plus(tailUrl)).content as InputStream
                             val imageBitmap = Drawable.createFromStream(inputStream, "src name")?.toBitmap(200, 200, Bitmap.Config.ARGB_8888)
@@ -285,7 +290,7 @@ class DataViewModel @Inject constructor(
                             imagesCache.addImageToCache(imageName, imageBitmap)
                             imageBitmap
                         } catch (e: Exception) {
-                            println(e.message)
+                            //TODO: ON EXCEPTION RETURN NULL. FURTHER DEVELOPMENT COULD RETRY THESE REQUESTS
                             null
                         }
                 }
