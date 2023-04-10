@@ -12,20 +12,20 @@ Coding Challenge: Weather
 
 # Key Libraries
 - **Java**
-  - RxJava
 - **Kotlin**
-  - Kotlin Coroutines 
+  - Kotlin Coroutines
+  - Kotlin Flow
 - **Android Jetpack**
   - Compose (MaterialDesign 2)
-  - Lifecycle
+  - Lifecycle (LiveData)
   - Navigation
-  - Room
+  - Room (SQLite)
 - **Dependency Injection**
-  - Hilt
+  - Hilt (built on Dagger)
 - **REST API**
   - Retrofit 2
   - OkHttp
-  - FasterXML Jackson
+  - FasterXML Jackson (JSON to object)
 - **Unit and Integration Testing**
   - Compose UI Test
   - Espresso
