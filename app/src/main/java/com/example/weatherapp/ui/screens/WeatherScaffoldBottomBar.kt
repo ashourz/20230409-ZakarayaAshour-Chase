@@ -58,8 +58,8 @@ fun LandscapeSideNavigationBar(
                 },
                 selected = it == selectedDestination,
                 onClick = { onNavigationItemClick(it) },
-                selectedContentColor = MaterialTheme.colors.onPrimary,
-                unselectedContentColor = MaterialTheme.colors.onPrimary.copy(alpha = ContentAlpha.medium)
+                selectedContentColor = MaterialTheme.colors.onSurface,
+                unselectedContentColor = MaterialTheme.colors.onSurface.copy(alpha = ContentAlpha.medium)
             )
         }
     }
