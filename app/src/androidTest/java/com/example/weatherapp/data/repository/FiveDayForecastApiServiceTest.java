@@ -6,9 +6,9 @@ import static org.junit.Assert.assertTrue;
 
 import android.app.Application;
 
-import com.example.hilttutorial.moved.FiveDayForecast;
 import com.example.weatherapp.constants.ApiBaseUrl;
 import com.example.weatherapp.data.model.FiveDayForecast;
+import com.example.weatherapp.data.repository.baseclass.ForecastApiServiceBaseClass;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -38,7 +38,7 @@ public class FiveDayForecastApiServiceTest {
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Inject
-    FiveDayForecastApiService fiveDayForecastApiService;
+    ForecastApiServiceBaseClass fiveDayForecastApiService;
 
     @Inject
     Application application;

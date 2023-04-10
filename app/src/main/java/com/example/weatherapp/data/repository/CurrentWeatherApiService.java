@@ -5,6 +5,7 @@ import android.app.Application;
 import com.example.weatherapp.R;
 import com.example.weatherapp.data.model.CurrentWeather;
 import com.example.weatherapp.data.remote.WeatherApiInterface;
+import com.example.weatherapp.data.repository.baseclass.WeatherApiServiceBaseClass;
 
 import java.util.Optional;
 

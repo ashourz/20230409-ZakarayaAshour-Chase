@@ -4,6 +4,7 @@ import com.example.weatherapp.data.model.CurrentWeather;
 import com.example.weatherapp.data.model.GeoCity;
 import com.example.weatherapp.data.model.weather_components.Main;
 import com.example.weatherapp.data.model.weather_components.Weather;
+import com.example.weatherapp.data.repository.baseclass.WeatherApiServiceBaseClass;
 
 import java.util.List;
 import java.util.Optional;

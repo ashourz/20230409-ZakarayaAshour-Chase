@@ -65,40 +65,16 @@ public class WeatherRepositoryTest {
         // Arrange
         CurrentWeather currentWeather = createMockCurrentWeather();
         GeoCity city = createMockGeoCity();
+        FiveDayForecast fiveDayForecast = createMockFiveDayForecast();
 
         // Act
-        Long insertedId = weatherRepository.updateCurrentWeather(city, currentWeather);
+        Long insertedId = weatherRepository.updateWeather(city, currentWeather,fiveDayForecast);
         assertNotNull(insertedId);
         assertNotEquals(Optional.of(-1L), insertedId);
 
         // Assert
         List<WeatherEntity> actualWeatherEntities = weatherDao.getAll();
         WeatherEntity expectedWeatherEntity = weatherMapper.currentWeatherToWeatherEntity(city, currentWeather);
-        for(WeatherEntity item : actualWeatherEntities){
-            assertEquals(item.city, expectedWeatherEntity.city);
-            assertEquals(item.state, expectedWeatherEntity.state);
-            assertEquals(item.country, expectedWeatherEntity.country);
-            assertEquals(item.icon, expectedWeatherEntity.icon);
-            assertEquals(item.feelsLike, expectedWeatherEntity.feelsLike);
-            assertEquals(item.temp, expectedWeatherEntity.temp);
-            assertEquals(item.tempMin, expectedWeatherEntity.tempMin);
-            assertEquals(item.tempMax, expectedWeatherEntity.tempMax);
-            assertEquals(item.description, expectedWeatherEntity.description);
-            assertEquals(item.datetime, expectedWeatherEntity.datetime);
-        }
-    }
-
-    @Test
-    public void updateFiveDayFOrecastWeather_withValidInput_shouldInsertIntoWeatherDao() {
-        // Arrange
-        FiveDayForecast fiveDayForecast = createMockFiveDayForecast();
-
-        // Act
-        List<Long> insertedIdList = weatherRepository.updateWeather(fiveDayForecast);
-        assertTrue(!insertedIdList.isEmpty());
-        // Assert
-        List<WeatherEntity> actualWeatherEntities = weatherDao.getAll();
-        WeatherEntity expectedWeatherEntity = weatherMapper.fiveDayForecastToWeatherEntityList(fiveDayForecast).get(0);
         for(WeatherEntity item : actualWeatherEntities){
             assertEquals(item.city, expectedWeatherEntity.city);
             assertEquals(item.state, expectedWeatherEntity.state);

@@ -8,6 +8,7 @@ import android.app.Application;
 
 import com.example.weatherapp.constants.ApiBaseUrl;
 import com.example.weatherapp.data.model.CurrentWeather;
+import com.example.weatherapp.data.repository.baseclass.WeatherApiServiceBaseClass;
 
 import org.junit.Before;
 import org.junit.Rule;

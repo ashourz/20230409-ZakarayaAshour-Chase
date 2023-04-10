@@ -15,8 +15,11 @@ import java.util.List;
  * */
 @Dao
 public interface WeatherDao {
-    @Query("SELECT * FROM weather_table ORDER BY datetime")
-    LiveData<List<WeatherEntity>> getAllLiveData();
+    @Query("SELECT * FROM weather_table WHERE uid NOT IN (SELECT uid FROM weather_table ORDER BY datetime LIMIT 1) ORDER BY datetime")
+    LiveData<List<WeatherEntity>> getAllButFirstLiveData();
+
+    @Query("SELECT * FROM weather_table ORDER BY datetime LIMIT 1")
+    LiveData<List<WeatherEntity>> getFirstLiveData();
 
     @Query("SELECT * FROM weather_table")
     List<WeatherEntity> getAll();
@@ -26,6 +29,12 @@ public interface WeatherDao {
      * */
     @Insert
     Long insert(WeatherEntity weatherEntity);
+
+    /**
+     * Returns list of Long rowIds of inserted Elements
+     * */
+    @Insert
+    List<Long> insertAll(List<WeatherEntity> weatherEntityList);
 
     @Query("DELETE FROM weather_table")
     void deleteAll();

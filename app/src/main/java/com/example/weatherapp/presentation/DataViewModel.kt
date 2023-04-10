@@ -10,12 +10,13 @@ import android.widget.Toast
 import androidx.compose.runtime.mutableStateListOf
 import androidx.core.app.ActivityCompat
 import androidx.core.graphics.drawable.toBitmap
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asFlow
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.weatherapp.cache.ImagesCache
 import com.example.weatherapp.data.model.GeoCity
 import com.example.weatherapp.data.repository.*
+import com.example.weatherapp.data.repository.baseclass.CityApiServiceBaseClass
+import com.example.weatherapp.data.repository.baseclass.ForecastApiServiceBaseClass
+import com.example.weatherapp.data.repository.baseclass.WeatherApiServiceBaseClass
 import com.example.weatherapp.data.room.entity.WeatherEntity
 import com.example.weatherapp.extensions.getFullDisplayName
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -35,6 +36,7 @@ import kotlin.jvm.optionals.getOrNull
 
 @HiltViewModel
 class DataViewModel @Inject constructor(
+    private val forecastWeatherApiService: ForecastApiServiceBaseClass,
     private val currentWeatherApiService: WeatherApiServiceBaseClass,
     private val geoCityApiService: CityApiServiceBaseClass,
     private val weatherRepository: RepositoryBaseClass,
@@ -45,6 +47,7 @@ class DataViewModel @Inject constructor(
     init {
         //On Initialization if permission is granted retrieve current location weather data
         updateCurrentLocationWeather()
+//        updateForecastWeatherByCurrentLocation()
     }
 
     /**
@@ -79,12 +82,26 @@ class DataViewModel @Inject constructor(
     fun updateSearchLocationName(updatedSearchName: String) {
         _searchLocationNameFlow.value = updatedSearchName
     }
+
     //Current Weather Bitmap
     private var _currentWeatherBitmapFlow = MutableStateFlow<Bitmap?>(null)
     var currentWeatherBitmapFlow = _currentWeatherBitmapFlow.asStateFlow()
     private fun updateCurrentWeatherBitmap(bitmap: Bitmap?) {
         _currentWeatherBitmapFlow.value = bitmap
     }
+
+    private var _forecastWeatherBitmapFlow = MutableStateFlow<List<Bitmap?>>(emptyList())
+    var forecastWeatherBitmapFlow = _forecastWeatherBitmapFlow.asStateFlow()
+    private fun updateForecastWeatherBitmap(bitmapList: List<Bitmap?>) {
+        _forecastWeatherBitmapFlow.value = bitmapList
+    }
+
+    private var _currentWeatherDataFlow = MutableStateFlow<WeatherDisplayData?>(null)
+    var currentWeatherDataFlow = _currentWeatherDataFlow.asStateFlow()
+    private fun updateCurrentWeatherDataFlow(weatherDisplayData: WeatherDisplayData?) {
+        _currentWeatherDataFlow.value = weatherDisplayData
+    }
+
     //endregion
 
     /**
@@ -93,7 +110,7 @@ class DataViewModel @Inject constructor(
      * On each emission of this flow (if subscribed to by the UI) relative update processes are initiated to the update searchLocationName Flow and currentWeatherBitmap Flow
      * */
     @OptIn(ExperimentalCoroutinesApi::class)
-    val storedWeatherFlow: Flow<WeatherEntity?> = weatherRepository.weatherLiveData().asFlow().flowOn(Dispatchers.IO).mapLatest { weatherEntityList ->
+    val currentWeatherFlow: Flow<WeatherEntity?> = weatherRepository.currentWeatherLiveData().asFlow().flowOn(Dispatchers.IO).mapLatest { weatherEntityList ->
         weatherEntityList.firstOrNull()
     }.onEach { weatherEntity ->
         if (weatherEntity != null) {
@@ -102,6 +119,14 @@ class DataViewModel @Inject constructor(
         } else {
             updateSearchLocationName("")
             updateCurrentWeatherBitmap(null)
+        }
+    }
+
+    val forecastWeatherDataFlow: Flow<List<WeatherEntity>> = weatherRepository.forecastWeatherLiveData().asFlow().flowOn(Dispatchers.IO).onEach { weatherEntityList ->
+        if (weatherEntityList.isNotEmpty()) {
+            updateWeatherIconBitmapList(weatherEntityList.map { it.icon })
+        } else {
+            updateForecastWeatherBitmap(emptyList())
         }
     }
 
@@ -124,24 +149,30 @@ class DataViewModel @Inject constructor(
             val optionalCurrentWeather = currentWeatherApiService.getCurrentWeatherData(latitude, longitude)
             if (!optionalCurrentWeather.isPresent) {
                 viewModelScope.launch(Dispatchers.Main) {
-                    Toast.makeText(application.applicationContext, "Weather Data Request Failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(application.applicationContext, "Current Weather Request Failed", Toast.LENGTH_SHORT).show()
+                }
+            }
+            val optionalForecastWeather = forecastWeatherApiService.getFiveDayForecastData(latitude, longitude)
+            if (!optionalForecastWeather.isPresent) {
+                viewModelScope.launch(Dispatchers.Main) {
+                    Toast.makeText(application.applicationContext, " Forecast Weather Request Failed", Toast.LENGTH_SHORT).show()
                 }
             }
             if (optionalCurrentWeather.isPresent) {
                 optionalCurrentWeather.ifPresent { currentWeather ->
-                    val returnedId = weatherRepository.updateCurrentWeather(geoCity, currentWeather)
-                    if (returnedId >= 0) {
-                        viewModelScope.launch(Dispatchers.Main) {
-                            Toast.makeText(application.applicationContext, "Current Weather Updated", Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        viewModelScope.launch(Dispatchers.Main) {
-                            Toast.makeText(application.applicationContext, "Failed To Store Current Weather Data", Toast.LENGTH_SHORT).show()
+                    optionalForecastWeather.ifPresent { fiveDayForecast ->
+                        val returnedId = weatherRepository.updateWeather(geoCity, currentWeather, fiveDayForecast)
+                        if (returnedId >= 0) {
+                            viewModelScope.launch(Dispatchers.Main) {
+                                Toast.makeText(application.applicationContext, "Weather Data Updated", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            viewModelScope.launch(Dispatchers.Main) {
+                                Toast.makeText(application.applicationContext, "Failed To Store Weather Data", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     }
-
                 }
-
             }
         }
     }
@@ -236,6 +267,28 @@ class DataViewModel @Inject constructor(
                         println(e.message)
                         null
                     }
+            )
+        }
+    }
+
+    private fun updateWeatherIconBitmapList(imageNameList: List<String>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            updateForecastWeatherBitmap(
+                imageNameList.map { imageName ->
+                    imagesCache.getImageFromCache(imageName)
+                        ?: try {
+                            val baseUrl = "https://openweathermap.org/img/wn/"
+                            val tailUrl = "@2x.png"
+                            val inputStream: InputStream = URL(baseUrl.plus(imageName).plus(tailUrl)).content as InputStream
+                            val imageBitmap = Drawable.createFromStream(inputStream, "src name")?.toBitmap(200, 200, Bitmap.Config.ARGB_8888)
+                            imageBitmap?.setHasAlpha(true)
+                            imagesCache.addImageToCache(imageName, imageBitmap)
+                            imageBitmap
+                        } catch (e: Exception) {
+                            println(e.message)
+                            null
+                        }
+                }
             )
         }
     }

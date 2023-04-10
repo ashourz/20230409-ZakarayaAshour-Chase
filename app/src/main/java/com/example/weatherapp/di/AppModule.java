@@ -5,11 +5,13 @@ import android.app.Application;
 import com.example.weatherapp.cache.ImagesCache;
 import com.example.weatherapp.constants.ApiBaseUrl;
 import com.example.weatherapp.data.model.WeatherMapper;
-import com.example.weatherapp.data.repository.CityApiServiceBaseClass;
+import com.example.weatherapp.data.repository.FiveDayForecastApiService;
+import com.example.weatherapp.data.repository.baseclass.CityApiServiceBaseClass;
 import com.example.weatherapp.data.repository.CurrentWeatherApiService;
 import com.example.weatherapp.data.repository.GeoCityApiService;
 import com.example.weatherapp.data.repository.RepositoryBaseClass;
-import com.example.weatherapp.data.repository.WeatherApiServiceBaseClass;
+import com.example.weatherapp.data.repository.baseclass.ForecastApiServiceBaseClass;
+import com.example.weatherapp.data.repository.baseclass.WeatherApiServiceBaseClass;
 import com.example.weatherapp.data.repository.WeatherRepository;
 import com.example.weatherapp.data.room.dao.WeatherDao;
 
@@ -29,7 +31,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 /**
  * Hilt App Module for Application scoped singletons
- * */
+ */
 @Module
 @InstallIn(SingletonComponent.class)
 public class AppModule {
@@ -82,9 +84,9 @@ public class AppModule {
     public RepositoryBaseClass provideWeatherRepository(
             WeatherDao weatherDao,
             WeatherMapper weatherMapper) {
-            return new WeatherRepository(
-                    weatherDao,
-                    weatherMapper);
+        return new WeatherRepository(
+                weatherDao,
+                weatherMapper);
     }
 
     @Singleton
@@ -103,6 +105,16 @@ public class AppModule {
             @Named("weatherClient") Retrofit retrofitClient,
             Application application) {
         return new CurrentWeatherApiService(
+                retrofitClient,
+                application);
+    }
+
+    @Singleton
+    @Provides
+    public ForecastApiServiceBaseClass provideFiveDayForecastApiService(
+            @Named("weatherClient") Retrofit retrofitClient,
+            Application application) {
+        return new FiveDayForecastApiService(
                 retrofitClient,
                 application);
     }

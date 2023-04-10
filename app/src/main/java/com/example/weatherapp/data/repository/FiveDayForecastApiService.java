@@ -2,38 +2,34 @@ package com.example.weatherapp.data.repository;
 
 import android.app.Application;
 
-import com.example.hilttutorial.moved.FiveDayForecast;
-import com.example.hilttutorial.moved.WeatherApiInterface;
 import com.example.weatherapp.R;
+import com.example.weatherapp.data.model.FiveDayForecast;
+import com.example.weatherapp.data.remote.WeatherApiInterface;
+import com.example.weatherapp.data.repository.baseclass.ForecastApiServiceBaseClass;
 
 import java.util.Optional;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
 
-public class FiveDayForecastApiService {
+public class FiveDayForecastApiService extends ForecastApiServiceBaseClass {
 
     private final WeatherApiInterface weatherApiInterface;
     private final String apiKey;
 
-    @Inject
-    FiveDayForecastApiService(
-            @Named("weatherClient") Retrofit retrofitClient,
+    public FiveDayForecastApiService(
+            Retrofit retrofitClient,
             Application application) {
         this.weatherApiInterface = retrofitClient.create(WeatherApiInterface.class);
         this.apiKey = application.getString(R.string.open_weather_api_key);
-
     }
 
-
+    @Override
     public Optional<FiveDayForecast> getFiveDayForecastData(Double latitude, Double longitude) {
         try {
             Response<FiveDayForecast> response = weatherApiInterface.getFiveDayForecastData(latitude, longitude, apiKey)
-                                                                        .execute();
+                                                                    .execute();
             if (response.isSuccessful()) {
                 if (response.body() == null) {
                     //TODO: POSSIBLE FURTHER IMPROVEMENT - NULL RESPONSE BODY

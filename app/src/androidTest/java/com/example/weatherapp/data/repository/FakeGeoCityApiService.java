@@ -2,6 +2,7 @@ package com.example.weatherapp.data.repository;
 
 
 import com.example.weatherapp.data.model.GeoCity;
+import com.example.weatherapp.data.repository.baseclass.CityApiServiceBaseClass;
 
 import java.util.ArrayList;
 import java.util.List;

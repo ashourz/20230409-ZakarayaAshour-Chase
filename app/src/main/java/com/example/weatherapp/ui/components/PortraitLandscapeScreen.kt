@@ -21,9 +21,8 @@ fun PortraitLandscapeScreen(
     lazyPrimary: (LazyListScope.() -> Unit),
     lazySecondary: (LazyListScope.() -> Unit),
 ) {
-    val configuration = LocalConfiguration.current
 
-    when (configuration.orientation) {
+    when(LocalConfiguration.current.orientation){
         Configuration.ORIENTATION_LANDSCAPE -> {
             LandscapeScreen(
                 modifier = modifier,

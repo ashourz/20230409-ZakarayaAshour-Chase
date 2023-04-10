@@ -10,5 +10,16 @@ import java.time.format.FormatStyle
  * */
 fun LocalDateTime.toDisplayFormat(): String {
     val timeZoneOffset = ZonedDateTime.now().offset.totalSeconds.toLong()
+    return this.plusSeconds(timeZoneOffset).format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT))
+}
+
+fun LocalDateTime.toDisplayTimeFormat(): String {
+    val timeZoneOffset = ZonedDateTime.now().offset.totalSeconds.toLong()
     return this.plusSeconds(timeZoneOffset).format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
 }
+
+fun LocalDateTime.toDisplayDateFormat(): String {
+    val timeZoneOffset = ZonedDateTime.now().offset.totalSeconds.toLong()
+    return this.plusSeconds(timeZoneOffset).format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+}
+

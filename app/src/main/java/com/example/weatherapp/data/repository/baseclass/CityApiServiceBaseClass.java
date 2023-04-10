@@ -1,4 +1,4 @@
-package com.example.weatherapp.data.repository;
+package com.example.weatherapp.data.repository.baseclass;
 
 
 import com.example.weatherapp.data.model.GeoCity;

@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.weatherapp.data.model.CurrentWeather;
+import com.example.weatherapp.data.model.FiveDayForecast;
 import com.example.weatherapp.data.model.GeoCity;
 import com.example.weatherapp.data.room.entity.WeatherEntity;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,12 +16,19 @@ import java.util.List;
  * */
 public class RepositoryBaseClass {
 
-    public LiveData<List<WeatherEntity>> weatherLiveData(){
+    public LiveData<List<WeatherEntity>> forecastWeatherLiveData(){
         return new MutableLiveData<List<WeatherEntity>>();
     };
 
-    public Long updateCurrentWeather(GeoCity geoCity, CurrentWeather currentWeather){
+    public LiveData<List<WeatherEntity>> currentWeatherLiveData(){
+        return new MutableLiveData<List<WeatherEntity>>();
+    };
+
+
+    public Long updateWeather(GeoCity geoCity, CurrentWeather currentWeather, FiveDayForecast fiveDayForecast){
         return -1L;
     };
+
+
 
 }

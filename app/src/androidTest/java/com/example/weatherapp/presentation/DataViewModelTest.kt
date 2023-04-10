@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.weatherapp.cache.ImagesCache
 import com.example.weatherapp.data.repository.FakeCurrentWeatherApiService
+import com.example.weatherapp.data.repository.FakeForecastWeatherApiService
 import com.example.weatherapp.data.repository.FakeGeoCityApiService
 import com.example.weatherapp.data.repository.FakeWeatherRepository
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -26,10 +27,11 @@ class DataViewModelTest {
     @get:Rule
     val instantTasExecutorRule = InstantTaskExecutorRule()
 
-    lateinit var dataViewModel: DataViewModel
-    lateinit var fakeCurrentWeatherApiService: FakeCurrentWeatherApiService
-    lateinit var fakeGeoCityApiService: FakeGeoCityApiService
-    lateinit var fakeWeatherRepository: FakeWeatherRepository
+    private lateinit var dataViewModel: DataViewModel
+    private lateinit var fakeCurrentWeatherApiService: FakeCurrentWeatherApiService
+    private lateinit var fakeGeoCityApiService: FakeGeoCityApiService
+    private lateinit var fakeWeatherRepository: FakeWeatherRepository
+    private lateinit var fakeForecastApiService: FakeForecastWeatherApiService
 
     @Inject
     lateinit var application: Application
@@ -40,7 +42,10 @@ class DataViewModelTest {
         fakeCurrentWeatherApiService = FakeCurrentWeatherApiService()
         fakeGeoCityApiService = FakeGeoCityApiService()
         fakeWeatherRepository = FakeWeatherRepository()
+        fakeForecastApiService = FakeForecastWeatherApiService()
+
         dataViewModel = DataViewModel(
+            forecastWeatherApiService = fakeForecastApiService,
             currentWeatherApiService = fakeCurrentWeatherApiService,
             geoCityApiService = fakeGeoCityApiService,
             weatherRepository = fakeWeatherRepository,

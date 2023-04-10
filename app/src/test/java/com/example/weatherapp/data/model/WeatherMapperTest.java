@@ -1,7 +1,10 @@
 package com.example.weatherapp.data.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import com.example.weatherapp.data.model.weather_components.City;
 import com.example.weatherapp.data.model.weather_components.Main;
 import com.example.weatherapp.data.model.weather_components.Weather;
 import com.example.weatherapp.data.model.weather_components.WeatherListItem;

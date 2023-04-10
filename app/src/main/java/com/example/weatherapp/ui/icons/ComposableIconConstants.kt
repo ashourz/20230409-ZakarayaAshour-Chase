@@ -12,6 +12,8 @@ object ComposableIconConstants {
     const val currentLocationIcon = R.drawable.baseline_my_location_24
     const val searchIcon = R.drawable.baseline_search_24
     const val locationPinIcon = R.drawable.baseline_location_on_24
+    const val todayIcon = R.drawable.baseline_today_24
+    const val fiveDayIcon = R.drawable.baseline_filter_5_24
 
     //endregion
 

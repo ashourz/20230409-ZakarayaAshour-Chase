@@ -3,6 +3,7 @@ package com.example.weatherapp.data.repository;
 import androidx.lifecycle.LiveData;
 
 import com.example.weatherapp.data.model.CurrentWeather;
+import com.example.weatherapp.data.model.FiveDayForecast;
 import com.example.weatherapp.data.model.GeoCity;
 import com.example.weatherapp.data.model.WeatherMapper;
 import com.example.weatherapp.data.room.dao.WeatherDao;
@@ -27,14 +28,22 @@ public class WeatherRepository extends RepositoryBaseClass {
     }
 
     @Override
-    public LiveData<List<WeatherEntity>> weatherLiveData(){
-        return weatherDao.getAllLiveData();
+    public LiveData<List<WeatherEntity>> forecastWeatherLiveData(){
+        return weatherDao.getAllButFirstLiveData();
     }
 
     @Override
-    public Long updateCurrentWeather(GeoCity geoCity, CurrentWeather currentWeather){
+    public LiveData<List<WeatherEntity>> currentWeatherLiveData(){
+        return weatherDao.getFirstLiveData();
+    }
+
+    @Override
+    public Long updateWeather(GeoCity geoCity, CurrentWeather currentWeather, FiveDayForecast fiveDayForecast){
+        Long returnInt = 0L;
         weatherDao.deleteAll();
-        return weatherDao.insert(weatherMapper.currentWeatherToWeatherEntity(geoCity, currentWeather));
+        returnInt += weatherDao.insert(weatherMapper.currentWeatherToWeatherEntity(geoCity, currentWeather));
+        returnInt += weatherDao.insertAll(weatherMapper.fiveDayForecastToWeatherEntityList(fiveDayForecast)).stream().count();
+        return returnInt;
     }
 
 }
