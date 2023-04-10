@@ -7,10 +7,12 @@ import static org.junit.Assert.assertNotNull;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.weatherapp.data.model.CurrentWeather;
+import com.example.weatherapp.data.model.FiveDayForecast;
 import com.example.weatherapp.data.model.GeoCity;
 import com.example.weatherapp.data.model.WeatherMapper;
 import com.example.weatherapp.data.model.weather_components.Main;
 import com.example.weatherapp.data.model.weather_components.Weather;
+import com.example.weatherapp.data.model.weather_components.WeatherListItem;
 import com.example.weatherapp.data.room.dao.WeatherDao;
 import com.example.weatherapp.data.room.entity.WeatherEntity;
 
@@ -84,12 +86,69 @@ public class WeatherRepositoryTest {
         }
     }
 
+    @Test
+    public void updateFiveDayFOrecastWeather_withValidInput_shouldInsertIntoWeatherDao() {
+        // Arrange
+        FiveDayForecast fiveDayForecast = createMockFiveDayForecast();
+
+        // Act
+        List<Long> insertedIdList = weatherRepository.updateWeather(fiveDayForecast);
+        assertTrue(!insertedIdList.isEmpty());
+        // Assert
+        List<WeatherEntity> actualWeatherEntities = weatherDao.getAll();
+        WeatherEntity expectedWeatherEntity = weatherMapper.fiveDayForecastToWeatherEntityList(fiveDayForecast).get(0);
+        for(WeatherEntity item : actualWeatherEntities){
+            assertEquals(item.city, expectedWeatherEntity.city);
+            assertEquals(item.state, expectedWeatherEntity.state);
+            assertEquals(item.country, expectedWeatherEntity.country);
+            assertEquals(item.icon, expectedWeatherEntity.icon);
+            assertEquals(item.feelsLike, expectedWeatherEntity.feelsLike);
+            assertEquals(item.temp, expectedWeatherEntity.temp);
+            assertEquals(item.tempMin, expectedWeatherEntity.tempMin);
+            assertEquals(item.tempMax, expectedWeatherEntity.tempMax);
+            assertEquals(item.description, expectedWeatherEntity.description);
+            assertEquals(item.datetime, expectedWeatherEntity.datetime);
+        }
+    }
+
     private CurrentWeather createMockCurrentWeather() {
         CurrentWeather currentWeather = new CurrentWeather();
         currentWeather.setDt(1648834800L);
         currentWeather.setWeather(createMockWeatherList());
         currentWeather.setMain(createMockMain());
         return currentWeather;
+    }
+
+    private FiveDayForecast createMockFiveDayForecast() {
+        List<WeatherListItem> weatherListItems = new ArrayList<>();
+        weatherListItems.add(createMockWeatherListItem());
+
+        FiveDayForecast fiveDayForecast = new FiveDayForecast();
+        fiveDayForecast.setList(weatherListItems);
+        fiveDayForecast.setCity(createMockCity());
+
+        return fiveDayForecast;
+    }
+
+    private List<Weather> createMockWeatherList() {
+
+        List<Weather> weatherList = new ArrayList<>();
+        Weather weather = new Weather();
+        weather.setId(800);
+        weather.setDescription("clear sky");
+        weatherList.add(weather);
+
+        return weatherList;
+    }
+
+    private WeatherListItem createMockWeatherListItem() {
+
+        WeatherListItem weatherListItem = new WeatherListItem();
+        weatherListItem.setDt(1648834800L);
+        weatherListItem.setMain(createMockMain());
+        weatherListItem.setWeather(createMockWeatherList());
+
+        return weatherListItem;
     }
 
     private Main createMockMain() {
@@ -105,6 +164,14 @@ public class WeatherRepositoryTest {
 
     private GeoCity createMockGeoCity() {
         GeoCity city = new GeoCity();
+        city.setName("Test City");
+        city.setCountry("TC");
+
+        return city;
+    }
+
+    private City createMockCity() {
+        City city = new City();
         city.setName("Test City");
         city.setCountry("TC");
 
