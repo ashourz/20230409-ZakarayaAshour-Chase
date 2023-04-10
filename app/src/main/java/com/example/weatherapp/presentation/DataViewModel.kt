@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable
 import android.location.Location
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.core.app.ActivityCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.*
@@ -255,18 +256,7 @@ class DataViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             updateCurrentWeatherBitmap(
                 imagesCache.getImageFromCache(imageName)
-                    ?: try {
-                        val baseUrl = ApiBaseUrl.WEATHER_BITMAP_BASE_URL.baseUrl
-                        val tailUrl = "@2x.png"
-                        val inputStream: InputStream = URL(baseUrl.plus(imageName).plus(tailUrl)).content as InputStream
-                        val imageBitmap = Drawable.createFromStream(inputStream, "src name")?.toBitmap(200, 200, Bitmap.Config.ARGB_8888)
-                        imageBitmap?.setHasAlpha(true)
-                        imagesCache.addImageToCache(imageName, imageBitmap)
-                        imageBitmap
-                    } catch (e: Exception) {
-                        //TODO: ON EXCEPTION RETURN NULL. FURTHER DEVELOPMENT COULD RETRY THESE REQUESTS
-                        null
-                    }
+                    ?: requestWeatherIconBitmapList(imageName)
             )
         }
     }
@@ -281,20 +271,27 @@ class DataViewModel @Inject constructor(
             updateForecastWeatherBitmap(
                 imageNameList.map { imageName ->
                     imagesCache.getImageFromCache(imageName)
-                        ?: try {
-                            val baseUrl = ApiBaseUrl.WEATHER_BITMAP_BASE_URL.baseUrl
-                            val tailUrl = "@2x.png"
-                            val inputStream: InputStream = URL(baseUrl.plus(imageName).plus(tailUrl)).content as InputStream
-                            val imageBitmap = Drawable.createFromStream(inputStream, "src name")?.toBitmap(200, 200, Bitmap.Config.ARGB_8888)
-                            imageBitmap?.setHasAlpha(true)
-                            imagesCache.addImageToCache(imageName, imageBitmap)
-                            imageBitmap
-                        } catch (e: Exception) {
-                            //TODO: ON EXCEPTION RETURN NULL. FURTHER DEVELOPMENT COULD RETRY THESE REQUESTS
-                            null
-                        }
+                        ?: requestWeatherIconBitmapList(imageName)
                 }
             )
+        }
+    }
+
+    /**
+     * Url request to retrieve weather icon bitmap
+     * */
+    private fun requestWeatherIconBitmapList(imageName: String): Bitmap? {
+        return try {
+            val baseUrl = ApiBaseUrl.WEATHER_BITMAP_BASE_URL.baseUrl
+            val tailUrl = "@2x.png"
+            val inputStream: InputStream = URL(baseUrl.plus(imageName).plus(tailUrl)).content as InputStream
+            val imageBitmap = Drawable.createFromStream(inputStream, "src name")?.toBitmap(200, 200, Bitmap.Config.ARGB_8888)
+            imageBitmap?.setHasAlpha(true)
+            imagesCache.addImageToCache(imageName, imageBitmap)
+            imageBitmap
+        } catch (e: Exception) {
+            //ON EXCEPTION RETURN NULL. FURTHER DEVELOPMENT COULD RETRY THESE REQUESTS
+            null
         }
     }
 }
