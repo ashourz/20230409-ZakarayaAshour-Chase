@@ -55,7 +55,7 @@ Coding Challenge: Weather
 </p>
 <p float="left">
  <img src="https://user-images.githubusercontent.com/39238415/230876907-62cb5c3d-9390-4552-aa61-a0faea854ca7.png" height="160" />
- <img src="https://user-images.githubusercontent.com/39238415/230876917-fcffd5e7-233c-4087-b9a6-c48adc719836.png" height="160" />
+ <img src="https://user-images.githubusercontent.com/39238415/230880760-10d8311d-3512-4a22-ae9e-5e68c0ef1357.png" height="160" />
 </p>
 
 
