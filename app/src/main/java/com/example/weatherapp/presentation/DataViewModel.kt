@@ -43,7 +43,9 @@ class DataViewModel @Inject constructor(
     private val geoCityApiService: CityApiServiceBaseClass,
     private val weatherRepository: RepositoryBaseClass,
     private val application: Application,
-    private val imagesCache: ImagesCache
+    private val imagesCache: ImagesCache,
+    private val weatherBitmapApiService: BitmapApiServiceBaseClass
+
 ) : ViewModel() {
 
     /**
@@ -256,7 +258,7 @@ class DataViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             updateCurrentWeatherBitmap(
                 imagesCache.getImageFromCache(imageName)
-                    ?: requestWeatherIconBitmapList(imageName)
+                    ?: weatherBitmapApiService.requestBitmap(imageName)
             )
         }
     }
@@ -271,27 +273,10 @@ class DataViewModel @Inject constructor(
             updateForecastWeatherBitmap(
                 imageNameList.map { imageName ->
                     imagesCache.getImageFromCache(imageName)
-                        ?: requestWeatherIconBitmapList(imageName)
+                        ?: weatherBitmapApiService.requestBitmap(imageName)
                 }
             )
         }
     }
 
-    /**
-     * Url request to retrieve weather icon bitmap
-     * */
-    private fun requestWeatherIconBitmapList(imageName: String): Bitmap? {
-        return try {
-            val baseUrl = ApiBaseUrl.WEATHER_BITMAP_BASE_URL.baseUrl
-            val tailUrl = "@2x.png"
-            val inputStream: InputStream = URL(baseUrl.plus(imageName).plus(tailUrl)).content as InputStream
-            val imageBitmap = Drawable.createFromStream(inputStream, "src name")?.toBitmap(200, 200, Bitmap.Config.ARGB_8888)
-            imageBitmap?.setHasAlpha(true)
-            imagesCache.addImageToCache(imageName, imageBitmap)
-            imageBitmap
-        } catch (e: Exception) {
-            //ON EXCEPTION RETURN NULL. FURTHER DEVELOPMENT COULD RETRY THESE REQUESTS
-            null
-        }
-    }
 }

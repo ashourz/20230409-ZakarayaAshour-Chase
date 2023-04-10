@@ -5,7 +5,9 @@ import android.app.Application;
 import com.example.weatherapp.cache.ImagesCache;
 import com.example.weatherapp.constants.ApiBaseUrl;
 import com.example.weatherapp.data.model.WeatherMapper;
+import com.example.weatherapp.data.repository.BitmapApiServiceBaseClass;
 import com.example.weatherapp.data.repository.FiveDayForecastApiService;
+import com.example.weatherapp.data.repository.WeatherBitmapApiService;
 import com.example.weatherapp.data.repository.baseclass.CityApiServiceBaseClass;
 import com.example.weatherapp.data.repository.CurrentWeatherApiService;
 import com.example.weatherapp.data.repository.GeoCityApiService;
@@ -117,5 +119,12 @@ public class AppModule {
         return new FiveDayForecastApiService(
                 retrofitClient,
                 application);
+    }
+
+    @Singleton
+    @Provides
+    public BitmapApiServiceBaseClass provideWeatherBitmapApiService(
+            ImagesCache imagesCache) {
+        return new WeatherBitmapApiService(imagesCache);
     }
 }

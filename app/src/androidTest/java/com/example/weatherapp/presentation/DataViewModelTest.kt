@@ -3,10 +3,7 @@ package com.example.weatherapp.presentation
 import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.weatherapp.cache.ImagesCache
-import com.example.weatherapp.data.repository.FakeCurrentWeatherApiService
-import com.example.weatherapp.data.repository.FakeForecastWeatherApiService
-import com.example.weatherapp.data.repository.FakeGeoCityApiService
-import com.example.weatherapp.data.repository.FakeWeatherRepository
+import com.example.weatherapp.data.repository.*
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.assertFalse
@@ -32,6 +29,7 @@ class DataViewModelTest {
     private lateinit var fakeGeoCityApiService: FakeGeoCityApiService
     private lateinit var fakeWeatherRepository: FakeWeatherRepository
     private lateinit var fakeForecastApiService: FakeForecastWeatherApiService
+    private lateinit var fakeBitmapApiService: FakeBitmapApiService
 
     @Inject
     lateinit var application: Application
@@ -43,14 +41,15 @@ class DataViewModelTest {
         fakeGeoCityApiService = FakeGeoCityApiService()
         fakeWeatherRepository = FakeWeatherRepository()
         fakeForecastApiService = FakeForecastWeatherApiService()
-
+        fakeBitmapApiService = FakeBitmapApiService(ImagesCache())
         dataViewModel = DataViewModel(
             forecastWeatherApiService = fakeForecastApiService,
             currentWeatherApiService = fakeCurrentWeatherApiService,
             geoCityApiService = fakeGeoCityApiService,
             weatherRepository = fakeWeatherRepository,
             application = application,
-            imagesCache = ImagesCache()
+            imagesCache = ImagesCache(),
+            weatherBitmapApiService = fakeBitmapApiService
         )
     }
 

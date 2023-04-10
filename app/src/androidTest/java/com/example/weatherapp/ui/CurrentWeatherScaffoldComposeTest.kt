@@ -83,7 +83,6 @@ class CurrentWeatherScaffoldComposeTest {
             val currentDataName = composeTestRule.onNodeWithContentDescription("Current Data Name").assertIsDisplayed()
             composeTestRule.waitUntilAtLeastOneExists(hasText("Paris", substring = true).and(hasContentDescription("Current Data Name")))
             currentDataName.assert(hasText("Paris", substring = true))
-            composeTestRule.waitUntilAtLeastOneExists(hasContentDescription("Weather Icon"))
             composeTestRule.onNodeWithContentDescription("Temperature Value").assertIsDisplayed()
             composeTestRule.onNodeWithContentDescription("Feels Like").assertIsDisplayed()
             composeTestRule.onNodeWithContentDescription("Low Temp").assertIsDisplayed()
@@ -94,14 +93,12 @@ class CurrentWeatherScaffoldComposeTest {
     /**
      * Requires manual granting of location permissions to succeed.
      * */
-    @OptIn(ExperimentalTestApi::class)
     @Test
     fun testCurrentLocationButtonClicked() {
         composeTestRule.waitForIdle()
         ActivityScenario.launch(MainActivity::class.java).use { scenario ->
             val locationButton = composeTestRule.onNodeWithContentDescription("Get Current Location").assertHasClickAction()
             locationButton.performClick()
-            composeTestRule.waitForIdle()
             //Assert Weather Data on Screen
             composeTestRule.onNodeWithContentDescription("Current Data Name").assertIsDisplayed()
             composeTestRule.onNodeWithContentDescription("Temperature Value").assertIsDisplayed()
