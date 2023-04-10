@@ -30,7 +30,7 @@ public class CurrentWeatherApiService extends WeatherApiServiceBaseClass {
     }
 
     /**
-     * Get current weather data or return null on null body or exception
+     * Synchronous request for current weather data. Return empty optional on null body or exception.
      * */
     @Override
     public Optional<CurrentWeather> getCurrentWeatherData(Double latitude, Double longitude) {

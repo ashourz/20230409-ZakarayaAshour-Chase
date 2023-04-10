@@ -30,6 +30,9 @@ public class GeoCityApiService extends CityApiServiceBaseClass {
         this.apiKey = application.getString(R.string.open_weather_api_key);
     }
 
+    /**
+     * Synchronous request for GeoCity data by city name. Return empty optional on null body or exception.
+     * */
     @Override
     public Optional<List<GeoCity>> getCityData(String cityName) {
         try {

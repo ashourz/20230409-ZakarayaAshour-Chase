@@ -25,6 +25,9 @@ public class FiveDayForecastApiService extends ForecastApiServiceBaseClass {
         this.apiKey = application.getString(R.string.open_weather_api_key);
     }
 
+    /**
+     * Synchronous request for forecast weather data. Return empty optional on null body or exception.
+     * */
     @Override
     public Optional<FiveDayForecast> getFiveDayForecastData(Double latitude, Double longitude) {
         try {

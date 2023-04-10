@@ -8,7 +8,6 @@ import com.example.weatherapp.data.model.FiveDayForecast;
 import com.example.weatherapp.data.model.GeoCity;
 import com.example.weatherapp.data.room.entity.WeatherEntity;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
