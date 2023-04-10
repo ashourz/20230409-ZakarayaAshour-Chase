@@ -1,7 +1,17 @@
 package com.example.weatherapp.di;
 
+import android.app.Application;
+
 import com.example.weatherapp.cache.ImagesCache;
 import com.example.weatherapp.constants.ApiBaseUrl;
+import com.example.weatherapp.data.model.WeatherMapper;
+import com.example.weatherapp.data.repository.CityApiServiceBaseClass;
+import com.example.weatherapp.data.repository.CurrentWeatherApiService;
+import com.example.weatherapp.data.repository.GeoCityApiService;
+import com.example.weatherapp.data.repository.RepositoryBaseClass;
+import com.example.weatherapp.data.repository.WeatherApiServiceBaseClass;
+import com.example.weatherapp.data.repository.WeatherRepository;
+import com.example.weatherapp.data.room.dao.WeatherDao;
 
 import java.util.concurrent.TimeUnit;
 
@@ -65,5 +75,35 @@ public class AppModule {
         ImagesCache imagesCache = ImagesCache.getInstance();
         imagesCache.initializeCache();
         return imagesCache;
+    }
+
+    @Singleton
+    @Provides
+    public RepositoryBaseClass provideWeatherRepository(
+            WeatherDao weatherDao,
+            WeatherMapper weatherMapper) {
+            return new WeatherRepository(
+                    weatherDao,
+                    weatherMapper);
+    }
+
+    @Singleton
+    @Provides
+    public CityApiServiceBaseClass provideGeoCityApiService(
+            @Named("geocodingClient") Retrofit retrofitClient,
+            Application application) {
+        return new GeoCityApiService(
+                retrofitClient,
+                application);
+    }
+
+    @Singleton
+    @Provides
+    public WeatherApiServiceBaseClass provideCurrentWeatherApiService(
+            @Named("weatherClient") Retrofit retrofitClient,
+            Application application) {
+        return new CurrentWeatherApiService(
+                retrofitClient,
+                application);
     }
 }

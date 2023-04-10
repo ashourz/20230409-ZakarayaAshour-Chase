@@ -15,9 +15,7 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.cache.ImagesCache
 import com.example.weatherapp.data.model.GeoCity
-import com.example.weatherapp.data.repository.CurrentWeatherApiService
-import com.example.weatherapp.data.repository.GeoCityApiService
-import com.example.weatherapp.data.repository.WeatherRepository
+import com.example.weatherapp.data.repository.*
 import com.example.weatherapp.data.room.entity.WeatherEntity
 import com.example.weatherapp.extensions.getFullDisplayName
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -37,9 +35,9 @@ import kotlin.jvm.optionals.getOrNull
 
 @HiltViewModel
 class DataViewModel @Inject constructor(
-    private val currentWeatherApiService: CurrentWeatherApiService,
-    private val geoCityApiService: GeoCityApiService,
-    private val weatherRepository: WeatherRepository,
+    private val currentWeatherApiService: WeatherApiServiceBaseClass,
+    private val geoCityApiService: CityApiServiceBaseClass,
+    private val weatherRepository: RepositoryBaseClass,
     private val application: Application,
     private val imagesCache: ImagesCache
 ) : ViewModel() {
@@ -125,7 +123,7 @@ class DataViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val optionalCurrentWeather = currentWeatherApiService.getCurrentWeatherData(latitude, longitude)
             if (!optionalCurrentWeather.isPresent) {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.Main) {
                     Toast.makeText(application.applicationContext, "Weather Data Request Failed", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -133,11 +131,11 @@ class DataViewModel @Inject constructor(
                 optionalCurrentWeather.ifPresent { currentWeather ->
                     val returnedId = weatherRepository.updateCurrentWeather(geoCity, currentWeather)
                     if (returnedId >= 0) {
-                        viewModelScope.launch {
+                        viewModelScope.launch(Dispatchers.Main) {
                             Toast.makeText(application.applicationContext, "Current Weather Updated", Toast.LENGTH_SHORT).show()
                         }
                     } else {
-                        viewModelScope.launch {
+                        viewModelScope.launch(Dispatchers.Main) {
                             Toast.makeText(application.applicationContext, "Failed To Store Current Weather Data", Toast.LENGTH_SHORT).show()
                         }
                     }
@@ -149,7 +147,7 @@ class DataViewModel @Inject constructor(
     }
 
     /**
-     * Data refresh methos for current location. This action is taken on initialization of DataViewModel and on click of the current location icon (with sufficient permissions)
+     * Data refresh method for current location. This action is taken on initialization of DataViewModel and on click of the current location icon (with sufficient permissions)
      * */
     fun updateCurrentLocationWeather() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -158,7 +156,7 @@ class DataViewModel @Inject constructor(
                 val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(application.applicationContext)
                 fusedLocationClient.getCurrentLocation(LocationRequest.PRIORITY_HIGH_ACCURACY, null).addOnSuccessListener { location: Location? ->
                     if (location == null) {
-                        viewModelScope.launch {
+                        viewModelScope.launch(Dispatchers.Main) {
                             Toast.makeText(application.applicationContext, "Cannot get location.", Toast.LENGTH_SHORT).show()
                         }
                     } else {
@@ -166,7 +164,7 @@ class DataViewModel @Inject constructor(
                             getCurrentCity(latitude = location.latitude, longitude = location.longitude)?.let { currentGeoCity ->
                                 refreshCurrentWeather(geoCity = currentGeoCity, latitude = location.latitude, longitude = location.longitude)
                             } ?: run {
-                                viewModelScope.launch {
+                                viewModelScope.launch(Dispatchers.Main) {
                                     Toast.makeText(application.applicationContext, "Cannot get location.", Toast.LENGTH_SHORT).show()
                                 }
                             }
@@ -185,7 +183,7 @@ class DataViewModel @Inject constructor(
             val optionalGeoCityList = geoCityApiService.getCityData(_searchLocationNameFlow.value)
             if (!optionalGeoCityList.isPresent) {
                 //GEO CITY REQUEST RETURNED EMPTY OR ERROR
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.Main) {
                     Toast.makeText(application.applicationContext, "City Not Found", Toast.LENGTH_SHORT).show()
                 }
             }

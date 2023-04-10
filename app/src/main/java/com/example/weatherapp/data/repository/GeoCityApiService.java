@@ -10,9 +10,6 @@ import com.example.weatherapp.data.remote.CityApiInterface;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
@@ -21,19 +18,19 @@ import retrofit2.Retrofit;
  * Further development could include different outputs depending on the response failure.
  * At the moment, all failures or empty responses will result in a null or empty optional value.
  * */
-public class GeoCityApiService {
+public class GeoCityApiService extends CityApiServiceBaseClass {
     private final CityApiInterface cityApiInterface;
     private final String apiKey;
 
-    @Inject
     public GeoCityApiService(
-    @Named("geocodingClient") Retrofit retrofitClient,
+    Retrofit retrofitClient,
     Application application) {
         this.cityApiInterface = retrofitClient.create(CityApiInterface.class);
         this.apiKey = application.getString(R.string.open_weather_api_key);
     }
 
-    public Optional<List<GeoCity>> getCityData(String cityName) {
+    @Override
+     public Optional<List<GeoCity>> getCityData(String cityName) {
         try {
             Response<List<GeoCity>> response = cityApiInterface.getCityCoordinates(cityName, apiKey)
                                                          .execute();
@@ -52,7 +49,7 @@ public class GeoCityApiService {
             return Optional.empty();
         }
     }
-
+    @Override
     public Optional<List<GeoCity>> getCityNameData(Double latitude, Double longitude) {
         try {
             Response<List<GeoCity>> response = cityApiInterface.getCityName(latitude, longitude, apiKey).execute();

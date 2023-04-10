@@ -8,10 +8,6 @@ import com.example.weatherapp.data.remote.WeatherApiInterface;
 
 import java.util.Optional;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
-import dagger.hilt.android.qualifiers.ApplicationContext;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
@@ -20,23 +16,22 @@ import retrofit2.Retrofit;
  * Further development could include different outputs depending on the response failure.
  * At the moment, all failures or empty responses will result in a null or empty optional value.
  * */
-public class CurrentWeatherApiService {
+public class CurrentWeatherApiService extends WeatherApiServiceBaseClass {
 
     private final WeatherApiInterface weatherApiInterface;
     private final String apiKey;
 
-    @Inject
-    public CurrentWeatherApiService(
-            @Named("weatherClient") Retrofit retrofitClient,
+    public CurrentWeatherApiService (
+            Retrofit retrofitClient,
             Application application) {
         this.weatherApiInterface = retrofitClient.create(WeatherApiInterface.class);
         this.apiKey = application.getString(R.string.open_weather_api_key);
-
     }
 
     /**
      * Get current weather data or return null on null body or exception
      * */
+    @Override
     public Optional<CurrentWeather> getCurrentWeatherData(Double latitude, Double longitude) {
         try {
             Response<CurrentWeather> response = weatherApiInterface.getCurrentWeatherData(latitude, longitude, apiKey)

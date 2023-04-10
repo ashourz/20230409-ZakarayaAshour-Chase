@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.example.weatherapp.constants.ApiBaseUrl;
-import com.example.weatherapp.di.AppModule;
 
 import org.junit.Before;
 import org.junit.Rule;

@@ -38,7 +38,7 @@ public class GeoCityApiServiceTest {
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Inject
-    GeoCityApiService geoCityApiService;
+    CityApiServiceBaseClass geoCityApiService;
 
     @Inject
     Application application;

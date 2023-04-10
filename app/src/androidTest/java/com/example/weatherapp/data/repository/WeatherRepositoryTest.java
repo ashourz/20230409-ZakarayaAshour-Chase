@@ -40,7 +40,7 @@ public class WeatherRepositoryTest {
     WeatherDao weatherDao;
 
     @Inject
-    WeatherRepository weatherRepository;
+    RepositoryBaseClass weatherRepository;
 
     @Inject
     WeatherMapper weatherMapper;

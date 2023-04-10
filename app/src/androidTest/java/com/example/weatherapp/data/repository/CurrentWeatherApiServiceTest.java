@@ -36,7 +36,7 @@ public class CurrentWeatherApiServiceTest {
     public HiltAndroidRule hiltRule = new HiltAndroidRule(this);
 
     @Inject
-    CurrentWeatherApiService currentWeatherApiService;
+    WeatherApiServiceBaseClass currentWeatherApiService;
 
     @Inject
     Application application;
