@@ -47,7 +47,7 @@ Coding Challenge: Weather
 
 # Screenshots
 <p float="left">
-<img src="(https://user-images.githubusercontent.com/39238415/230876683-1c12a77e-144b-44ab-adc8-e13aba768ec4.png" width="160" />  
+<img src="https://user-images.githubusercontent.com/39238415/230876683-1c12a77e-144b-44ab-adc8-e13aba768ec4.png" width="160" />  
 <img src="https://user-images.githubusercontent.com/39238415/230876727-661598ba-b719-48f4-924b-2caedd070917.png" width="160" />
 <img src="https://user-images.githubusercontent.com/39238415/230876746-88d26d4a-6091-4ab9-8a36-6795abd5aa23.png" width="160" />
 <img src="https://user-images.githubusercontent.com/39238415/230876761-48a27e8a-de15-419a-b8ab-2e2096cf4c94.png" width="160" />
