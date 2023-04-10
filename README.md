@@ -11,21 +11,21 @@ Coding Challenge: Weather
 - Ask the User for location access, If the User gives permission to access the location, then retrieve weather data by default
 
 # Key Libraries
-# - Java
+- **Java**
   - RxJava
-# - Kotlin
+- **Kotlin**
   - Kotlin Coroutines 
-# - Android Jetpack
+- **Android Jetpack**
   - Room
   - Compose (MaterialDesign 2)
   - Lifecycle
-# - Dependency Injection
+- **Dependency Injection**
   - Hilt
-# - REST API
+- **REST API**
   - Retrofit 2
   - OkHttp
   - FasterXML Jackson
-# - Unit and Integration Testing
+- **Unit and Integration Testing**
   - Compose UI Test
   - Espresso
   - HiltAndroidTest
