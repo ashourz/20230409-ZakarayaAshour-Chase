@@ -27,6 +27,7 @@ Coding Challenge: Weather
   - FasterXML Jackson
 - Unit and Integration Testing
   - Compose UI Test
+  - Espresso
   - HiltAndroidTest
   - JUnit4
 
