@@ -1,4 +1,4 @@
-# 20230409-ZakarayaAshour-Chase
+# My Weather App
 Coding Challenge: Weather
 
 # Project Assignment
